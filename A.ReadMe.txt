@@ -1,0 +1,32 @@
+Climatological data from DOST-PAGASA (http://bagong.pagasa.dost.gov.ph/climate/climate-data)
+Notes:
+-999.0 indicate Missing Values
+RAINFALL UNIT: mm
+-1.0 indicate Trace Values (RAINFALL<0.1mm)
+TMAX (Maximum Temperature, Unit: Deg C)
+TMIN (Minimum Temperature, Unit: Deg C)
+RH (Relative Humidity, Unit: %)
+Wind Speed, Unit: m/s
+Wind direction, Unit: degree relative to North indicating where the wind is blowing from
+Stations:
+Basco Radar Latitude: 20.427284 N Longitude: 121.970536 E Elevation: 167 m
+Laoag Latitude: 18.183016 N Longitude: 120.534723 E Elevation: 5 m
+Tuguegarao Latitude: 17.647678 N Longitude: 121.758469 E Elevation: 62 m
+Baguio Latitude: 16.403992 N Longitude: 120.60147 E Elevation: 1510.08 m
+Science Garden Latitude: 14.645072 N Longitude: 121.044282 E Elevation: 42 m
+Legazpi Latitude: 13.150937 N Longitude: 123.728605 E Elevation: 15.487 m
+Puerto Princesa Latitude: 9.740134 N Longitude: 118.758613 E Elevation: 16.76 m
+San Jose Latitude: 12.359602 N Longitude: 121.04788 E Elevation: 3.314 m
+Mactan Latitude: 10.322329 N Longitude: 123.980118 E Elevation: 24.3 m
+Tacloban Latitude: 11.22555556 N Longitude: 125.025 E Elevation: 2.711 m
+Catarman Latitude: 12.505372 N Longitude: 124.628514 E Elevation: 5.71 m
+Dumaguete Latitude: 9.335443 N Longitude: 123.303342 E Elevation: 7.048 m
+El Salvador Latitude: 8.535701 N Longitude: 124.557946 E Elevation: 8.902 m
+Surigao Latitude: 9.782797 N Longitude: 125.48935 E Elevation: 39 m
+Malaybalay Latitude: 8.151421 N Longitude: 125.133852 E Elevation: 627 m
+Davao City Latitude: 7.127577 N Longitude: 125.654969 E Elevation: 17.29 m
+General Santos Latitude: 6.057342 N Longitude: 125.103143 E Elevation: 132.199 m
+Zamboanga Latitude: 6.917099 N Longitude: 122.06631 E Elevation: 6.9 m
+-------
+For more details regarding this dataset, please refer to this paper:
+https://philjournalsci.dost.gov.ph/images/pdf/pjs_pdf/vol150no1/ClimDatPh_an_online_platform_for_data_acquisition_.pdf

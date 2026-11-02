@@ -1,0 +1,8 @@
+Date,Label,Sub,HI,Low,High,Temp,RH,Rain,Source,Level
+2026-11-02,02 Nov,Mon,38.3,37.5,39.0,32.8,59.0,68.0,Forecast,Hinga
+2026-11-03,03 Nov,Tue,37.4,36.7,38.1,32.5,56.0,71.0,Forecast,Hinga
+2026-11-04,04 Nov,Wed,37.1,36.0,38.2,32.6,53.0,22.0,Forecast,Hinga
+2026-11-05,05 Nov,Thu,37.2,36.0,38.4,32.7,53.0,29.0,Forecast,Hinga
+2026-11-06,06 Nov,Fri,37.3,36.3,38.2,31.4,63.0,92.0,Forecast,Hinga
+2026-11-07,07 Nov,Sat,36.7,35.6,37.8,29.7,71.0,91.0,Forecast,Hinga
+2026-11-08,08 Nov,Sun,35.5,34.4,36.5,27.4,84.0,70.0,Forecast,Hinga

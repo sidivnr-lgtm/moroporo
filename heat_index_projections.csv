@@ -1,0 +1,273 @@
+Station,Year,Projected_Max_HI,Slope_per_year,Is_Projected
+Baguio City,2015,32.17,-0.2576,False
+Baguio City,2016,31.91,-0.2576,False
+Baguio City,2017,31.65,-0.2576,False
+Baguio City,2018,31.4,-0.2576,False
+Baguio City,2019,31.14,-0.2576,False
+Baguio City,2020,30.88,-0.2576,False
+Baguio City,2021,30.62,-0.2576,False
+Baguio City,2022,30.37,-0.2576,False
+Baguio City,2023,30.11,-0.2576,False
+Baguio City,2024,29.85,-0.2576,False
+Baguio City,2025,29.59,-0.2576,True
+Baguio City,2026,29.34,-0.2576,True
+Baguio City,2027,29.08,-0.2576,True
+Baguio City,2028,28.82,-0.2576,True
+Baguio City,2029,28.56,-0.2576,True
+Baguio City,2030,28.31,-0.2576,True
+Basco Radar,2015,43.26,0.077,False
+Basco Radar,2016,43.34,0.077,False
+Basco Radar,2017,43.42,0.077,False
+Basco Radar,2018,43.49,0.077,False
+Basco Radar,2019,43.57,0.077,False
+Basco Radar,2020,43.65,0.077,False
+Basco Radar,2021,43.73,0.077,False
+Basco Radar,2022,43.8,0.077,False
+Basco Radar,2023,43.88,0.077,False
+Basco Radar,2024,43.96,0.077,False
+Basco Radar,2025,44.03,0.077,True
+Basco Radar,2026,44.11,0.077,True
+Basco Radar,2027,44.19,0.077,True
+Basco Radar,2028,44.26,0.077,True
+Basco Radar,2029,44.34,0.077,True
+Basco Radar,2030,44.42,0.077,True
+Catarman,2015,42.73,1.1073,False
+Catarman,2016,43.83,1.1073,False
+Catarman,2017,44.94,1.1073,False
+Catarman,2018,46.05,1.1073,False
+Catarman,2019,47.16,1.1073,False
+Catarman,2020,48.26,1.1073,False
+Catarman,2021,49.37,1.1073,False
+Catarman,2022,50.48,1.1073,False
+Catarman,2023,51.59,1.1073,False
+Catarman,2024,52.69,1.1073,False
+Catarman,2025,53.8,1.1073,True
+Catarman,2026,54.91,1.1073,True
+Catarman,2027,56.01,1.1073,True
+Catarman,2028,57.12,1.1073,True
+Catarman,2029,58.23,1.1073,True
+Catarman,2030,59.34,1.1073,True
+Davao City,2015,44.53,-0.0455,False
+Davao City,2016,44.49,-0.0455,False
+Davao City,2017,44.44,-0.0455,False
+Davao City,2018,44.4,-0.0455,False
+Davao City,2019,44.35,-0.0455,False
+Davao City,2020,44.31,-0.0455,False
+Davao City,2021,44.26,-0.0455,False
+Davao City,2022,44.22,-0.0455,False
+Davao City,2023,44.17,-0.0455,False
+Davao City,2024,44.13,-0.0455,False
+Davao City,2025,44.08,-0.0455,True
+Davao City,2026,44.03,-0.0455,True
+Davao City,2027,43.99,-0.0455,True
+Davao City,2028,43.94,-0.0455,True
+Davao City,2029,43.9,-0.0455,True
+Davao City,2030,43.85,-0.0455,True
+Dumaguete City,2015,47.68,-0.6382,False
+Dumaguete City,2016,47.04,-0.6382,False
+Dumaguete City,2017,46.41,-0.6382,False
+Dumaguete City,2018,45.77,-0.6382,False
+Dumaguete City,2019,45.13,-0.6382,False
+Dumaguete City,2020,44.49,-0.6382,False
+Dumaguete City,2021,43.85,-0.6382,False
+Dumaguete City,2022,43.21,-0.6382,False
+Dumaguete City,2023,42.58,-0.6382,False
+Dumaguete City,2024,41.94,-0.6382,False
+Dumaguete City,2025,41.3,-0.6382,True
+Dumaguete City,2026,40.66,-0.6382,True
+Dumaguete City,2027,40.02,-0.6382,True
+Dumaguete City,2028,39.39,-0.6382,True
+Dumaguete City,2029,38.75,-0.6382,True
+Dumaguete City,2030,38.11,-0.6382,True
+General Santos City,2015,47.57,-0.7255,False
+General Santos City,2016,46.85,-0.7255,False
+General Santos City,2017,46.12,-0.7255,False
+General Santos City,2018,45.4,-0.7255,False
+General Santos City,2019,44.67,-0.7255,False
+General Santos City,2020,43.95,-0.7255,False
+General Santos City,2021,43.22,-0.7255,False
+General Santos City,2022,42.5,-0.7255,False
+General Santos City,2023,41.77,-0.7255,False
+General Santos City,2024,41.05,-0.7255,False
+General Santos City,2025,40.32,-0.7255,True
+General Santos City,2026,39.59,-0.7255,True
+General Santos City,2027,38.87,-0.7255,True
+General Santos City,2028,38.14,-0.7255,True
+General Santos City,2029,37.42,-0.7255,True
+General Santos City,2030,36.69,-0.7255,True
+Laoag City,2015,44.63,0.2042,False
+Laoag City,2016,44.84,0.2042,False
+Laoag City,2017,45.04,0.2042,False
+Laoag City,2018,45.24,0.2042,False
+Laoag City,2019,45.45,0.2042,False
+Laoag City,2020,45.65,0.2042,False
+Laoag City,2021,45.86,0.2042,False
+Laoag City,2022,46.06,0.2042,False
+Laoag City,2023,46.26,0.2042,False
+Laoag City,2024,46.47,0.2042,False
+Laoag City,2025,46.67,0.2042,True
+Laoag City,2026,46.88,0.2042,True
+Laoag City,2027,47.08,0.2042,True
+Laoag City,2028,47.29,0.2042,True
+Laoag City,2029,47.49,0.2042,True
+Laoag City,2030,47.69,0.2042,True
+Legazpi City,2015,52.39,-0.3242,False
+Legazpi City,2016,52.06,-0.3242,False
+Legazpi City,2017,51.74,-0.3242,False
+Legazpi City,2018,51.42,-0.3242,False
+Legazpi City,2019,51.09,-0.3242,False
+Legazpi City,2020,50.77,-0.3242,False
+Legazpi City,2021,50.44,-0.3242,False
+Legazpi City,2022,50.12,-0.3242,False
+Legazpi City,2023,49.8,-0.3242,False
+Legazpi City,2024,49.47,-0.3242,False
+Legazpi City,2025,49.15,-0.3242,True
+Legazpi City,2026,48.82,-0.3242,True
+Legazpi City,2027,48.5,-0.3242,True
+Legazpi City,2028,48.17,-0.3242,True
+Legazpi City,2029,47.85,-0.3242,True
+Legazpi City,2030,47.53,-0.3242,True
+Mactan Int Airport,2015,49.4,-0.9685,False
+Mactan Int Airport,2016,48.43,-0.9685,False
+Mactan Int Airport,2017,47.46,-0.9685,False
+Mactan Int Airport,2018,46.49,-0.9685,False
+Mactan Int Airport,2019,45.52,-0.9685,False
+Mactan Int Airport,2020,44.56,-0.9685,False
+Mactan Int Airport,2021,43.59,-0.9685,False
+Mactan Int Airport,2022,42.62,-0.9685,False
+Mactan Int Airport,2023,41.65,-0.9685,False
+Mactan Int Airport,2024,40.68,-0.9685,False
+Mactan Int Airport,2025,39.71,-0.9685,True
+Mactan Int Airport,2026,38.74,-0.9685,True
+Mactan Int Airport,2027,37.78,-0.9685,True
+Mactan Int Airport,2028,36.81,-0.9685,True
+Mactan Int Airport,2029,35.84,-0.9685,True
+Mactan Int Airport,2030,34.87,-0.9685,True
+Malaybalay,2015,43.22,-0.32,False
+Malaybalay,2016,42.9,-0.32,False
+Malaybalay,2017,42.58,-0.32,False
+Malaybalay,2018,42.26,-0.32,False
+Malaybalay,2019,41.94,-0.32,False
+Malaybalay,2020,41.62,-0.32,False
+Malaybalay,2021,41.3,-0.32,False
+Malaybalay,2022,40.98,-0.32,False
+Malaybalay,2023,40.66,-0.32,False
+Malaybalay,2024,40.34,-0.32,False
+Malaybalay,2025,40.02,-0.32,True
+Malaybalay,2026,39.7,-0.32,True
+Malaybalay,2027,39.38,-0.32,True
+Malaybalay,2028,39.06,-0.32,True
+Malaybalay,2029,38.74,-0.32,True
+Malaybalay,2030,38.42,-0.32,True
+Puerto Princesa City,2015,43.31,0.0473,False
+Puerto Princesa City,2016,43.35,0.0473,False
+Puerto Princesa City,2017,43.4,0.0473,False
+Puerto Princesa City,2018,43.45,0.0473,False
+Puerto Princesa City,2019,43.5,0.0473,False
+Puerto Princesa City,2020,43.54,0.0473,False
+Puerto Princesa City,2021,43.59,0.0473,False
+Puerto Princesa City,2022,43.64,0.0473,False
+Puerto Princesa City,2023,43.69,0.0473,False
+Puerto Princesa City,2024,43.73,0.0473,False
+Puerto Princesa City,2025,43.78,0.0473,True
+Puerto Princesa City,2026,43.83,0.0473,True
+Puerto Princesa City,2027,43.87,0.0473,True
+Puerto Princesa City,2028,43.92,0.0473,True
+Puerto Princesa City,2029,43.97,0.0473,True
+Puerto Princesa City,2030,44.02,0.0473,True
+San Jose,2015,50.23,-0.3055,False
+San Jose,2016,49.93,-0.3055,False
+San Jose,2017,49.62,-0.3055,False
+San Jose,2018,49.32,-0.3055,False
+San Jose,2019,49.01,-0.3055,False
+San Jose,2020,48.71,-0.3055,False
+San Jose,2021,48.4,-0.3055,False
+San Jose,2022,48.1,-0.3055,False
+San Jose,2023,47.79,-0.3055,False
+San Jose,2024,47.49,-0.3055,False
+San Jose,2025,47.18,-0.3055,True
+San Jose,2026,46.87,-0.3055,True
+San Jose,2027,46.57,-0.3055,True
+San Jose,2028,46.26,-0.3055,True
+San Jose,2029,45.96,-0.3055,True
+San Jose,2030,45.65,-0.3055,True
+Science Garden QC,2015,47.63,-0.5679,False
+Science Garden QC,2016,47.06,-0.5679,False
+Science Garden QC,2017,46.49,-0.5679,False
+Science Garden QC,2018,45.92,-0.5679,False
+Science Garden QC,2019,45.35,-0.5679,False
+Science Garden QC,2020,44.79,-0.5679,False
+Science Garden QC,2021,44.22,-0.5679,False
+Science Garden QC,2022,43.65,-0.5679,False
+Science Garden QC,2023,43.08,-0.5679,False
+Science Garden QC,2024,42.51,-0.5679,False
+Science Garden QC,2025,41.95,-0.5679,True
+Science Garden QC,2026,41.38,-0.5679,True
+Science Garden QC,2027,40.81,-0.5679,True
+Science Garden QC,2028,40.24,-0.5679,True
+Science Garden QC,2029,39.68,-0.5679,True
+Science Garden QC,2030,39.11,-0.5679,True
+Surigao City,2015,50.94,-0.8097,False
+Surigao City,2016,50.13,-0.8097,False
+Surigao City,2017,49.32,-0.8097,False
+Surigao City,2018,48.51,-0.8097,False
+Surigao City,2019,47.7,-0.8097,False
+Surigao City,2020,46.9,-0.8097,False
+Surigao City,2021,46.09,-0.8097,False
+Surigao City,2022,45.28,-0.8097,False
+Surigao City,2023,44.47,-0.8097,False
+Surigao City,2024,43.66,-0.8097,False
+Surigao City,2025,42.85,-0.8097,True
+Surigao City,2026,42.04,-0.8097,True
+Surigao City,2027,41.23,-0.8097,True
+Surigao City,2028,40.42,-0.8097,True
+Surigao City,2029,39.61,-0.8097,True
+Surigao City,2030,38.8,-0.8097,True
+Tacloban City,2015,42.92,0.34,False
+Tacloban City,2016,43.26,0.34,False
+Tacloban City,2017,43.6,0.34,False
+Tacloban City,2018,43.94,0.34,False
+Tacloban City,2019,44.28,0.34,False
+Tacloban City,2020,44.62,0.34,False
+Tacloban City,2021,44.96,0.34,False
+Tacloban City,2022,45.3,0.34,False
+Tacloban City,2023,45.64,0.34,False
+Tacloban City,2024,45.98,0.34,False
+Tacloban City,2025,46.32,0.34,True
+Tacloban City,2026,46.66,0.34,True
+Tacloban City,2027,47.0,0.34,True
+Tacloban City,2028,47.34,0.34,True
+Tacloban City,2029,47.68,0.34,True
+Tacloban City,2030,48.02,0.34,True
+Tuguegarao City,2015,48.29,0.0842,False
+Tuguegarao City,2016,48.38,0.0842,False
+Tuguegarao City,2017,48.46,0.0842,False
+Tuguegarao City,2018,48.54,0.0842,False
+Tuguegarao City,2019,48.63,0.0842,False
+Tuguegarao City,2020,48.71,0.0842,False
+Tuguegarao City,2021,48.8,0.0842,False
+Tuguegarao City,2022,48.88,0.0842,False
+Tuguegarao City,2023,48.96,0.0842,False
+Tuguegarao City,2024,49.05,0.0842,False
+Tuguegarao City,2025,49.13,0.0842,True
+Tuguegarao City,2026,49.22,0.0842,True
+Tuguegarao City,2027,49.3,0.0842,True
+Tuguegarao City,2028,49.39,0.0842,True
+Tuguegarao City,2029,49.47,0.0842,True
+Tuguegarao City,2030,49.55,0.0842,True
+Zamboanga City,2015,46.25,-0.2612,False
+Zamboanga City,2016,45.98,-0.2612,False
+Zamboanga City,2017,45.72,-0.2612,False
+Zamboanga City,2018,45.46,-0.2612,False
+Zamboanga City,2019,45.2,-0.2612,False
+Zamboanga City,2020,44.94,-0.2612,False
+Zamboanga City,2021,44.68,-0.2612,False
+Zamboanga City,2022,44.42,-0.2612,False
+Zamboanga City,2023,44.16,-0.2612,False
+Zamboanga City,2024,43.89,-0.2612,False
+Zamboanga City,2025,43.63,-0.2612,True
+Zamboanga City,2026,43.37,-0.2612,True
+Zamboanga City,2027,43.11,-0.2612,True
+Zamboanga City,2028,42.85,-0.2612,True
+Zamboanga City,2029,42.59,-0.2612,True
+Zamboanga City,2030,42.33,-0.2612,True
