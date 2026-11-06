@@ -923,6 +923,190 @@ def ext_weight(lead_days, spread=0.0):
 
 
 # ---------------------------------------------------------
+# PAGASA PUBLISHED HEAT INDEX (daily values per synoptic station, from PAGASA's own website)
+#   Read from PAGASA's "Updated Computed and Daily Heat Index Values" bulletin (and the heat-index web page as a
+#   fallback). It is blended with the multi-model forecast and the station climatology below; nothing is shown in the
+#   interface for it, but the values reach the numbers, the heat-map station points and the printed reports.
+#   Time is kept the way PAGASA prints it: "As of 11 May 2024, 5PM", one value per calendar day.
+# ---------------------------------------------------------
+PAGASA_HI_PDF = "https://pubfiles.pagasa.dost.gov.ph/tamss/weather/heat_index_summary.pdf"
+PAGASA_HI_PAGE = "https://bagong.pagasa.dost.gov.ph/weather/heat-index"
+PAGASA_MAX_AGE_DAYS = 2          # a bulletin older than this is ignored, so a stale file can never leak in
+PAGASA_ALIASES = {               # app station -> words that must all appear in PAGASA's station name (lower case)
+    "Basco Radar": ["basco"], "Laoag City": ["laoag"], "Tuguegarao City": ["tuguegarao"],
+    "Baguio City": ["baguio"], "Science Garden QC": ["science garden"], "Legazpi City": ["legazpi"],
+    "San Jose": ["san jose", "mindoro"], "Catarman": ["catarman"], "Tacloban City": ["tacloban"],
+    "Mactan Int Airport": ["mactan"], "Dumaguete City": ["dumaguete"], "Puerto Princesa City": ["puerto princesa"],
+    "Surigao City": ["surigao"], "Malaybalay": ["malaybalay"], "Davao City": ["davao"],
+    "Zamboanga City": ["zamboanga"], "General Santos City": ["general santos"]}
+PAGASA_INFO = {"used": False, "map": False, "asof_text": ""}
+_PG_MONTHS = {m: i for i, m in enumerate(
+    ["jan", "feb", "mar", "apr", "may", "jun", "jul", "aug", "sep", "oct", "nov", "dec"], 1)}
+
+
+def _pdf_to_text(raw):
+    """PDF bytes -> text, with whichever reader is installed (pypdf, pdfplumber, then the pdftotext program)."""
+    import io
+    try:
+        from pypdf import PdfReader
+        return "\n".join((p.extract_text() or "") for p in PdfReader(io.BytesIO(raw)).pages)
+    except Exception:
+        pass
+    try:
+        import pdfplumber
+        with pdfplumber.open(io.BytesIO(raw)) as pdf:
+            return "\n".join((p.extract_text() or "") for p in pdf.pages)
+    except Exception:
+        pass
+    import subprocess
+    return subprocess.run(["pdftotext", "-layout", "-", "-"], input=raw, capture_output=True, timeout=20, check=True).stdout.decode("utf-8", "ignore")
+
+
+def _html_to_text(html):
+    html = re.sub(r"(?is)<(script|style).*?</\1>", " ", html)
+    html = re.sub(r"(?i)</(tr|p|div|li|h\d)>|<br\s*/?>", "\n", html)
+    return re.sub(r"[ \t\r\f\v]+", " ", re.sub(r"<[^>]+>", " ", html))
+
+
+def _parse_pagasa_text(text):
+    """-> {'asof': datetime, 'dates': [date, ...], 'rows': {station name: [HI per date]}} or None."""
+    m = re.search(r"As\s+of\s+(\d{1,2})\s+([A-Za-z]+)\.?\s+(\d{4})\s*,?\s*(\d{1,2})(?::(\d{2}))?\s*([AaPp])\.?\s*[Mm]", text)
+    if not m or m.group(2)[:3].lower() not in _PG_MONTHS:
+        return None
+    hr = int(m.group(4)) % 12 + (12 if m.group(6).lower() == "p" else 0)
+    asof = datetime(int(m.group(3)), _PG_MONTHS[m.group(2)[:3].lower()], int(m.group(1)), hr, int(m.group(5) or 0))
+    dates, seen = [], set()
+    for dm in re.finditer(r"\b(\d{1,2})\s*-\s*([A-Za-z]{3})[a-z]*\b", text):
+        mon = _PG_MONTHS.get(dm.group(2).lower())
+        if not mon:
+            continue
+        key = (int(dm.group(1)), mon)
+        if key in seen:
+            break                                        # the header is repeated on the next page
+        seen.add(key)
+        yr = asof.year + (1 if mon < asof.month - 6 else 0)
+        try:
+            dates.append(datetime(yr, mon, key[0]).date())
+        except ValueError:
+            return None
+    if not dates:
+        return None
+    rows = {}
+    for line in text.splitlines():
+        rm = re.match(r"^\s*(.*?[A-Za-z\)])\s+((?:\d{2}\s+)*\d{2})\s*$", line)
+        if not rm:
+            continue
+        vals = [float(v) for v in rm.group(2).split()]
+        if len(vals) >= len(dates) and all(15 <= v <= 65 for v in vals[-len(dates):]):
+            rows.setdefault(rm.group(1).strip(), vals[-len(dates):])
+    return {"asof": asof, "dates": dates, "rows": rows} if rows else None
+
+
+@st.cache_data(ttl=1800, show_spinner=False)
+def _fetch_pagasa_hi():
+    """PAGASA's bulletin first, the heat-index page second. Raises on failure so a failure is not cached."""
+    last = None
+    for url in (PAGASA_HI_PDF, PAGASA_HI_PAGE):
+        try:
+            r = requests.get(url, timeout=12, headers={"User-Agent": "Mozilla/5.0 (MOROPORO heat advisory)"})
+            r.raise_for_status()
+            parsed = _parse_pagasa_text(_pdf_to_text(r.content) if url.endswith(".pdf") else _html_to_text(r.text))
+            if parsed:
+                return parsed
+            last = RuntimeError("unrecognised layout at " + url)
+        except Exception as ex:
+            last = ex
+    raise RuntimeError(f"PAGASA heat index unavailable: {last}")
+
+
+def _pagasa_data():
+    try:
+        data = _fetch_pagasa_hi()
+    except Exception:
+        return None
+    now_ph = datetime.now(timezone.utc).replace(tzinfo=None) + timedelta(hours=8)
+    if abs((now_ph - data["asof"]).total_seconds()) > PAGASA_MAX_AGE_DAYS * 86400:
+        return None
+    return data
+
+
+def _pagasa_time_text(asof):
+    """Same wording PAGASA prints: 'As of 11 May 2024, 5PM'."""
+    h12 = asof.hour % 12 or 12
+    clock = f"{h12}{'AM' if asof.hour < 12 else 'PM'}" if asof.minute == 0 else f"{h12}:{asof.minute:02d}{'AM' if asof.hour < 12 else 'PM'}"
+    return f"As of {asof.day} {asof.strftime('%B %Y')}, {clock}"
+
+
+def _pagasa_row_value(data, station, d):
+    if d not in data["dates"]:
+        return None
+    words = PAGASA_ALIASES.get(station)
+    if not words:
+        return None
+    i = data["dates"].index(d)
+    for name, vals in data["rows"].items():
+        if all(w in name.lower() for w in words):
+            return vals[i]
+    return None
+
+
+def _km(a_lat, a_lon, b_lat, b_lon):
+    p1, p2 = math.radians(a_lat), math.radians(b_lat)
+    h = math.sin((p2 - p1) / 2) ** 2 + math.cos(p1) * math.cos(p2) * math.sin(math.radians(b_lon - a_lon) / 2) ** 2
+    return 12742.0 * math.asin(math.sqrt(h))
+
+
+def pagasa_hi_for(lat, lon, station, d):
+    """PAGASA's heat index for date d at the station nearest the point -> (value, km away) or None."""
+    data = _pagasa_data()
+    if not data or d not in data["dates"]:
+        return None
+    cand = [station] + sorted((a for a in PAGASA_ALIASES if a in STATION_COORDS), key=lambda s: _km(lat, lon, STATION_COORDS[s]["lat"], STATION_COORDS[s]["lon"]))
+    for s in cand:
+        v = _pagasa_row_value(data, s, d)
+        if v is not None and s in STATION_COORDS:
+            PAGASA_INFO.update(used=True, asof_text=_pagasa_time_text(data["asof"]))
+            return float(v), _km(lat, lon, STATION_COORDS[s]["lat"], STATION_COORDS[s]["lon"])
+    return None
+
+
+def external_peak_hi_p(lat, lon, d, station=None):
+    """Multi-model forecast balanced with PAGASA's own published heat index for the date.
+    PAGASA's weight is at most 0.45 and fades with distance from its station; where PAGASA and the models
+    disagree the spread widens, which in turn lowers the weight the whole external forecast gets against climatology."""
+    ext = external_peak_hi(lat, lon, d)
+    p = pagasa_hi_for(lat, lon, station, d)
+    if p is None:
+        return ext
+    pv, dist = p
+    if ext is None:                                       # models unreachable: PAGASA alone (whole degrees, so ±1)
+        return {"mean": pv, "spread": 1.0, "models": {"PAGASA": pv}}
+    w_p = 0.45 * max(0.25, 1.0 - dist / 300.0)
+    spread = float(np.sqrt(ext["spread"] ** 2 + (0.5 * abs(pv - ext["mean"])) ** 2))
+    return {"mean": w_p * pv + (1.0 - w_p) * ext["mean"], "spread": spread,
+            "models": {**ext["models"], "PAGASA": round(pv, 1)}}
+
+
+def pagasa_map_values(d, stations):
+    """PAGASA's value for date d at every station, or {} unless all of them are covered (keeps one scale on the map)."""
+    data = _pagasa_data()
+    if not data:
+        return {}
+    out = {}
+    for s in stations:
+        v = _pagasa_row_value(data, s, d)
+        if v is None:
+            return {}
+        out[s] = float(v)
+    PAGASA_INFO.update(map=True, asof_text=_pagasa_time_text(data["asof"]))
+    return out
+
+
+def _pagasa_cap():
+    return f" PAGASA heat index {PAGASA_INFO['asof_text']}." if PAGASA_INFO.get("used") or PAGASA_INFO.get("map") else ""
+
+
+# ---------------------------------------------------------
 # TRUE-DAILY DERIVATION
 # ---------------------------------------------------------
 station_hist_df = df_daily[['Date', nearest_st]].dropna()
@@ -950,7 +1134,7 @@ BLEND = {"used": False, "clim_hi": round(float(clim_hi), 1), "note": ""}
 lead_days = (target_date - TODAY_PH).days
 _ext = None
 if target_year == target_date.year and 0 <= lead_days <= 15:
-    _ext = external_peak_hi(lat_res, lon_res, target_date)
+    _ext = external_peak_hi_p(lat_res, lon_res, target_date, nearest_st)
 if _ext:
     _w = ext_weight(lead_days, _ext["spread"])
     synoptic_noise = 0.0   # a real forecast replaces the random term
@@ -967,6 +1151,17 @@ else:
         BLEND["note"] = "Inspection date is outside the 0–15 day forecast window (climatology + trend only)."
     else:
         BLEND["note"] = "External forecast service unreachable (climatology + trend only)."
+
+PAGASA_MAP = {}
+if target_year == target_date.year and 0 <= lead_days <= 15:
+    PAGASA_MAP = pagasa_map_values(target_date, STATIONS_PRESENT)
+
+
+def map_station_hi(s):
+    """Heat-map value of a station: PAGASA's published value for the inspection date when every station has one,
+    otherwise the projection for the selected year."""
+    return PAGASA_MAP[s] if PAGASA_MAP else float(projections_dict[s][year_idx])
+
 
 def solve_temp_for_hi(hi_c_target, rh_guess=70.0):
     def obj(t_c):
@@ -1001,7 +1196,7 @@ grid_lats_flat, grid_lons_flat = grid_lats.flatten(), grid_lons.flatten()
 
 st_lats = np.array([STATION_COORDS[s]['lat'] for s in STATIONS_PRESENT])
 st_lons = np.array([STATION_COORDS[s]['lon'] for s in STATIONS_PRESENT])
-st_his = np.array([projections_dict[s][year_idx] for s in STATIONS_PRESENT])
+st_his = np.array([map_station_hi(s) for s in STATIONS_PRESENT])
 
 dists_matrix = np.sqrt((grid_lats_flat[:, None] - st_lats[None, :])**2 + (grid_lons_flat[:, None] - st_lons[None, :])**2)
 weights_matrix = 1.0 / (dists_matrix**2.2 + 1e-5)
@@ -1166,7 +1361,7 @@ with tab_map:
 
     stations_json = json.dumps([
         {"n": s_name, "lat": float(STATION_COORDS[s_name]["lat"]), "lon": float(STATION_COORDS[s_name]["lon"]),
-         "v": round(float(projections_dict[s_name][year_idx]), 1)} for s_name in STATIONS_PRESENT])
+         "v": round(float(map_station_hi(s_name)), 1)} for s_name in STATIONS_PRESENT])
     target_json = json.dumps({"lat": float(lat_res), "lon": float(lon_res), "name": str(search_query), "hi": float(daily_target_hi)})
     THERMAL_HTML = """
     <!DOCTYPE html><html><head><meta charset="utf-8" />
@@ -1446,7 +1641,7 @@ def build_forecast(lat, lon, n_days, start_date, df_daily, station, trend_rate, 
         if model is not None and d in model.index and 0 <= lead < OM_MAX_DAYS:
             r = model.loc[d]
             hi_model, spread = float(r["HI"]), 0.0
-            ext = external_peak_hi(lat, lon, d)
+            ext = external_peak_hi_p(lat, lon, d, station)
             if ext:
                 hi_model, spread = 0.5 * hi_model + 0.5 * ext["mean"], ext["spread"]
             mean, sd = _climatology(df_daily, station, d, trend_rate, offset)
@@ -1812,7 +2007,7 @@ def _receipt_html(*, df, mode, horizon_label, place, station, lat, lon, signator
   <hr class="sep2"/>
   <div class="c">{_svg_barcode(ref)}<div class="sm" style="word-break:break-all">{e(ref)}</div></div>
   <div class="c big" style="margin-top:8px">*** THANK YOU ***</div>
-  <div class="c sm" style="margin-top:5px">Model-based advisory, not an official PAGASA forecast. Levels follow {e(source_note)}. Verify before citing.</div>
+  <div class="c sm" style="margin-top:5px">Model-based advisory, not an official PAGASA forecast.{e(_pagasa_cap())} Levels follow {e(source_note)}. Verify before citing.</div>
 </div></div>
 <div class="btns">
   <button class="btn" onclick="savePDF()">Save as PDF</button>
@@ -2187,7 +2382,7 @@ def _a4_maps_duo(lat, lon, pts, target_hi, place, city_zoom=10):
     ticks = "".join(f'<i style="left:{(v - 24) / 22 * 100:.1f}%">{v}</i>' for v in (24, 27, 33, 42, 46))
     cuts = "".join(f'<u style="left:{(v - 24) / 22 * 100:.1f}%"></u>' for v in (27, 33, 42))
     legend = (f'<div class="lg"><div class="lgbar" style="background:linear-gradient(90deg,{stops})">{cuts}{ticks}</div>'
-              f'<div class="cap">Colour = projected peak heat index (&deg;C), interpolated between PAGASA stations. '
+              f'<div class="cap">Colour = projected peak heat index (&deg;C), interpolated between PAGASA stations.{_pagasa_cap()} '
               f'Ticks = 4H cutoffs 27 / 33 / 42 &deg;C. Coloured dot = this location ({target_hi:.1f} &deg;C). Estimate, not a measurement.</div></div>')
     ph = _a4_map_img(lat, lon, pts, target_hi, place, z=5, W=286, H=185, cell=14, labels=False)
     city = _a4_map_img(lat, lon, pts, target_hi, place, z=int(city_zoom), W=428, H=185, cell=7, labels=True)
@@ -2308,7 +2503,7 @@ def _a4_html(*, df, mode, horizon_label, place, station, lat, lon, signatory, no
                  f'{(1 - blend["w_ext"]) * 100:.0f}% station climatology/trend ({blend["clim_hi"]}&deg;C). ')
     else:
         basis = f'Basis: {e((blend or {}).get("note") or "station climatology + trend")}. '
-    basis += "Forecast: ECMWF IFS, NOAA GFS and DWD ICON models via NOAA Rothfusz. Historical: PAGASA record after QC and k-NN imputation."
+    basis += "Forecast: ECMWF IFS, NOAA GFS and DWD ICON models via NOAA Rothfusz" + (", balanced with PAGASA's published heat index." + _pagasa_cap() if PAGASA_INFO.get("used") else ".") + " Historical: PAGASA record after QC and k-NN imputation."
 
     page = f"""<div class="page">
  {header}
@@ -2616,7 +2811,7 @@ with tab_forecast:
         is_synthetic=IS_SYNTHETIC,
         st_info={"lat": STATION_COORDS[nearest_st]["lat"], "lon": STATION_COORDS[nearest_st]["lon"],
                  "region": STATION_COORDS[nearest_st]["region"], "altitude": STATION_ALTITUDE_M.get(nearest_st)},
-        station_points=[(s, STATION_COORDS[s]["lat"], STATION_COORDS[s]["lon"], float(projections_dict[s][year_idx]))
+        station_points=[(s, STATION_COORDS[s]["lat"], STATION_COORDS[s]["lon"], float(map_station_hi(s)))
                         for s in STATIONS_PRESENT],
         target_hi=float(daily_target_hi), blend=BLEND, logo_uri=LOGO_URI)
 
